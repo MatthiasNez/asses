@@ -415,12 +415,12 @@ function k_multilinear_answer(i)
 					{
 						if(mode="normal")
 						{
-							gain_certain += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
+							gain_certain += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
 							k++;
 						}
 						else
 						{
-							gain_certain += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
+							gain_certain += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
 							k++;
 						}
 					}
@@ -428,11 +428,11 @@ function k_multilinear_answer(i)
 					{
 						if(mode="normal")
 						{	
-							gain_certain += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
+							gain_certain += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
 						}
 						else
 						{	
-							gain_certain += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
+							gain_certain += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
 						}	
 					}
 					if(mode=="normal")
