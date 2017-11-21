@@ -412,14 +412,29 @@ function k_multilinear_answer(i)
 						continue;
 					}
 					if(l==mon_k.ID_attribute[k])//if the attribut is in our list
-					{
-						gain_certain += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
-						k++;
-					}
+					{	
+						if(mode="normal")
++						{
++							gain_certain += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
++							k++;
++						}
++						else
++						{
++							gain_certain += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
++							k++;
++						}
 					else
-					{
-						gain_certain += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
-					}
+ 					{
+-						if(mode="normal")
++						{	
++							gain_certain += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
++						}
++						else
++						{	
++							gain_certain += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
++						}	
+ 					}
+					}	
 					if(mode=="normal")
 					{
 						gain_haut += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
@@ -442,18 +457,8 @@ function k_multilinear_answer(i)
 
 				// SETUP ARBRE GAUCHE
 				arbre_gauche.questions_proba_haut = probability;
-				if(mode=="normal")
-				{
-					arbre_gauche.questions_val_max = gain_haut;
-					arbre_gauche.questions_val_min = gain_bas;
-				}
-				else
-				{
-					arbre_gauche.questions_val_max = gain_bas;
-					arbre_gauche.questions_val_min = gain_haut;
-				}
-				//arbre_gauche.questions_val_max = gain_haut;
-				//arbre_gauche.questions_val_min = gain_bas;
+				arbre_gauche.questions_val_max = gain_haut;
+				arbre_gauche.questions_val_min = gain_bas;
 				arbre_gauche.questions_val_mean = gain_certain;
 				arbre_gauche.display();
 				arbre_gauche.update();
