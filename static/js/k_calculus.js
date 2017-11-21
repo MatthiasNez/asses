@@ -654,9 +654,9 @@ function k_answer(i, type)
 				else
 					{
 						var post_k = asses_session.k_calculus[type].k[l];
-						gain_certain += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_max + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
-						gain_haut += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
-						gain_bas += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_max + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
+						gain_certain += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
+						gain_haut += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_max + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
+						gain_bas += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
 					}
 				// INTERFACE
 				//on cache le bouton
