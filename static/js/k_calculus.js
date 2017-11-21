@@ -405,34 +405,53 @@ function k_multilinear_answer(i)
 
 				var k=0;
 				//first we delete the array of k for multiplicative
-				for (var l=0; l < asses_session.attributes.length; l++){
-					if(!asses_session.attributes[l].checked)//if not checked we don't put it
-					{
-						continue;
-					}
-					if(l==mon_k.ID_attribute[k])//if the attribut is in our list
-					{
-						gain_certain += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
-						k++;
-					}
-					else
-					{
-						gain_certain += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
-					}
-					if(mode=="normal")
-					{
-						gain_haut += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
-						gain_bas += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
-					}
-					else
-					{
-						gain_haut += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
-						gain_bas += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
-					}
+				if(mode=="normal")
+				{
+					var gain_certain = asses_session.attributes[mon_k.ID_attribute].val_max + ' ' + asses_session.attributes[mon_k.ID_attribute].unit;
+					var gain_haut = asses_session.attributes[mon_k.ID_attribute].val_max + ' ' + asses_session.attributes[mon_k.ID_attribute].unit;
+					var gain_bas = asses_session.attributes[mon_k.ID_attribute].val_min + ' ' + asses_session.attributes[mon_k.ID_attribute].unit;
+				}
+				else
+				{
+					var gain_certain = asses_session.attributes[mon_k.ID_attribute].val_min + ' ' + asses_session.attributes[mon_k.ID_attribute].unit;
+					var gain_haut = asses_session.attributes[mon_k.ID_attribute].val_min + ' ' + asses_session.attributes[mon_k.ID_attribute].unit;
+					var gain_bas = asses_session.attributes[mon_k.ID_attribute].val_max + ' ' + asses_session.attributes[mon_k.ID_attribute].unit;
 				}
 
-
-
+				for (var l = 0; l < i; l++)
+				{
+					if(mode="normal")
+					{
+						var pre_k = asses_session.k_calculus[type].k[l];
+						gain_certain += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_min + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
+						gain_haut += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_max + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
+						gain_bas += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_mmin + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
+					}
+					else
+					{
+						var pre_k = asses_session.k_calculus[type].k[l];
+						gain_certain += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_max + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
+						gain_haut += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_min + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
+						gain_bas += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_max + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
+					}
+				}		
+				for (var l = i + 1 ; l < asses_session.k_calculus[type].k.length; l++)
+				{	
+					if(mode="normal")
+					{
+						var post_k = asses_session.k_calculus[type].k[l];
+						gain_certain += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
+						gain_haut += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_max + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
+						gain_bas += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
+					}
+					else
+					{
+						var post_k = asses_session.k_calculus[type].k[l];
+						gain_certain += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_max + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
+						gain_haut += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
+						gain_bas += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_max + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
+					}
+				}	
 				// INTERFACE
 				//on cache le bouton
 				$("#k_value_"+i).hide();
@@ -441,18 +460,14 @@ function k_multilinear_answer(i)
 
 				// SETUP ARBRE GAUCHE
 				arbre_gauche.questions_proba_haut = probability;
-				if(mode=="normal")
-				{
-					arbre_gauche.questions_val_max = gain_haut;
-					arbre_gauche.questions_val_min = gain_bas;
-				}
-				else
-				{
-					arbre_gauche.questions_val_max = gain_bas;
-					arbre_gauche.questions_val_min = gain_haut;
-				}
-				//arbre_gauche.questions_val_max = gain_haut;
-				//arbre_gauche.questions_val_min = gain_bas;
+				// if(mode=="normal")
+				// {arbre_gauche.questions_val_max = gain_haut;
+				// arbre_gauche.questions_val_min = gain_bas;}
+				// else
+					// arbre_gauche.questions_val_max = gain_bas;
+					// arbre_gauche.questions_val_min = gain_haut;
+				arbre_gauche.questions_val_max = gain_haut;
+				arbre_gauche.questions_val_min = gain_bas;
 				arbre_gauche.questions_val_mean = gain_certain;
 				arbre_gauche.display();
 				arbre_gauche.update();
@@ -488,37 +503,21 @@ function k_multilinear_answer(i)
 
 					// when the user validate
 					$('.final_validation').click(function(){
-						//here we are in multilinearity we must calculate K with dependencies
 						var final_proba = parseFloat($('#final_proba').val());
-						var indices=String(asses_session.k_calculus[1].k[i].ID).split(",");
-						var KASoustraire=[];
 
-						for(var l=0; l<asses_session.k_calculus[1].k.length; l++) {
-							var nombreIndice=0;
-							for (var m = 0; m < indices.length; m++) {
-								if (asses_session.k_calculus[1].k[l].ID.indexOf(indices[m]) != -1 && asses_session.k_calculus[1].k[l].ID_attribute.length<indices.length)
-									nombreIndice++;
-							}
+						if (final_proba <= 1 && final_proba >= 0) {
 
-							if(nombreIndice==asses_session.k_calculus[1].k[l].ID_attribute.length)
-								KASoustraire.push(asses_session.k_calculus[1].k[l])
+							// we save it
+							asses_session.k_calculus[type].k[i].value = final_proba;
+							// backup local
+							localStorage.setItem("asses_session", JSON.stringify(asses_session));
+							// we reload the list
+							$("#k_value_" + i).hide("fast", function () {
+								update_k_list(type);
+								show_list();
+							});
+
 						}
-						var final_k=final_proba;
-						for(var m=0; m<KASoustraire.length; m++)
-						{
-							final_k-=KASoustraire[m].value;
-						}
-						final_k=Math.round(final_k*1000)/1000;
-
-						asses_session.k_calculus[1].k[i].value=final_k; //for multilinear it's 1
-						// backup local
-						localStorage.setItem("asses_session", JSON.stringify(asses_session));
-						// we reload the list
-						$("#k_value_"+i).hide( "fast",function(){
-							update_k_list(1);
-							show_list();
-						});
-
 					});
 				}
 
@@ -536,6 +535,7 @@ function k_multilinear_answer(i)
 				});
 			})()
 		}
+
 }
 
 function k_multilinear_calculate_last_one(i)
@@ -629,14 +629,14 @@ function k_answer(i, type)
 
 				for (var l = 0; l < i; l++)
 				{
-				if(mode="normal")
+					if(mode="normal")
 					{
 						var pre_k = asses_session.k_calculus[type].k[l];
 						gain_certain += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_min + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
 						gain_haut += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_max + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
 						gain_bas += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_mmin + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
 					}
-				else
+					else
 					{
 						var pre_k = asses_session.k_calculus[type].k[l];
 						gain_certain += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_max + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
@@ -646,14 +646,14 @@ function k_answer(i, type)
 				}		
 				for (var l = i + 1 ; l < asses_session.k_calculus[type].k.length; l++)
 				{	
-				if(mode="normal")
+					if(mode="normal")
 					{
 						var post_k = asses_session.k_calculus[type].k[l];
 						gain_certain += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
 						gain_haut += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_max + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
 						gain_bas += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
 					}
-				else
+					else
 					{
 						var post_k = asses_session.k_calculus[type].k[l];
 						gain_certain += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_max + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
