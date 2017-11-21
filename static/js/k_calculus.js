@@ -628,6 +628,7 @@ function k_answer(i, type)
 				}
 
 				for (var l = 0; l < i; l++)
+				{
 				if(mode="normal")
 					{
 						var pre_k = asses_session.k_calculus[type].k[l];
@@ -642,8 +643,9 @@ function k_answer(i, type)
 						gain_haut += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_min + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
 						gain_bas += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_max + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
 					}
-						
+				}		
 				for (var l = i + 1 ; l < asses_session.k_calculus[type].k.length; l++)
+				{	
 				if(mode="normal")
 					{
 						var post_k = asses_session.k_calculus[type].k[l];
@@ -654,10 +656,11 @@ function k_answer(i, type)
 				else
 					{
 						var post_k = asses_session.k_calculus[type].k[l];
-						gain_certain += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
-						gain_haut += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_max + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
-						gain_bas += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
+						gain_certain += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_max + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
+						gain_haut += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
+						gain_bas += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_max + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
 					}
+				}	
 				// INTERFACE
 				//on cache le bouton
 				$("#k_value_"+i).hide();
