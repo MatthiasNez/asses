@@ -386,9 +386,10 @@ function k_multilinear_answer(i)
 			}
 		}
 
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		///////////////////////////////////////////////////////////////// PE METHOD ////////////////////////////////////////////////////////////////
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 		if (method == 'PE') {
 			(function(){
@@ -405,6 +406,215 @@ function k_multilinear_answer(i)
 
 				var k=0;
 				//first we delete the array of k for multiplicative
+				for (var l=0; l < asses_session.attributes.length; l++){
+					if(!asses_session.attributes[l].checked)//if not checked we don't put it
+					{
+						continue;
+					}
+					if(l==mon_k.ID_attribute[k])//if the attribut is in our list
+					{
+						gain_certain += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
+						k++;
+					}
+					else
+					{
+						gain_certain += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
+					}
+					if(mode=="normal")
+					{
+						gain_haut += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
+						gain_bas += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
+					}
+					else
+					{
+						gain_haut += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
+						gain_bas += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
+					}
+				}
+
+
+
+				// INTERFACE
+				//on cache le bouton
+				$("#k_value_"+i).hide();
+				$("#k_value_"+i).append("<br/><br/>");
+				var arbre_gauche = new Arbre('pe', "#k_value_"+i, settings.display, "PE");
+
+				// SETUP ARBRE GAUCHE
+				arbre_gauche.questions_proba_haut = probability;
+				if(mode=="normal")
+				{
+					arbre_gauche.questions_val_max = gain_haut;
+					arbre_gauche.questions_val_min = gain_bas;
+				}
+				else
+				{
+					arbre_gauche.questions_val_max = gain_bas;
+					arbre_gauche.questions_val_min = gain_haut;
+				}
+				//arbre_gauche.questions_val_max = gain_haut;
+				//arbre_gauche.questions_val_min = gain_bas;
+				arbre_gauche.questions_val_mean = gain_certain;
+				arbre_gauche.display();
+				arbre_gauche.update();
+
+				$("#k_value_"+i).append('<br/><br/><br/><br/><div class=choice style="text-align: center;"><p>Which option do you prefer?</p><button type="button" class="btn btn-default gain">A</button><button type="button" class="btn btn-default lottery">B</button></div><br/><br/><div ></div>');
+				//on affiche l'arbre avec un petit effet !
+
+				$("#k_value_"+i).show("fast");
+
+				function treat_answer(data){
+					min_interval = data.interval[0];
+					max_interval = data.interval[1];
+					probability = parseFloat(data.proba).toFixed(2);
+
+					if (max_interval - min_interval <= 0.05){
+						arbre_gauche.questions_proba_haut = probability;
+						arbre_gauche.update();
+						ask_final_value(Math.round((max_interval + min_interval)*100/2)/100);
+					}
+					else {
+						arbre_gauche.questions_proba_haut = probability;
+						arbre_gauche.update();
+					}
+				}
+
+				function ask_final_value(val){
+					// we delete the choice div
+					$('.choice').hide();
+					$("#k_value_"+i).append(
+						'<br/><br/><br/><br/><div id= "final_value" style="text-align: center;margin-top:90px;"><br /><br /><p>We are almost done. Please enter the value that makes you indifferent between the two situations above. Your previous choices indicate that it should be between ' + min_interval + ' and ' + max_interval + ' but you are not constrained to that range <br /> '+ min_interval +'\
+						 <= <input type="text" class="form-control" id="final_proba" placeholder="Probability" value="'+val+'" style="width: 100px; display: inline-block"> <= '+ max_interval +'</p><button type="button" class="btn btn-default final_validation">Validate</button></div>'
+					);
+
+					// when the user validate
+					$('.final_validation').click(function(){
+						//here we are in multilinearity we must calculate K with dependencies
+						var final_proba = parseFloat($('#final_proba').val());
+						var indices=String(asses_session.k_calculus[1].k[i].ID).split(",");
+						var KASoustraire=[];
+
+						for(var l=0; l<asses_session.k_calculus[1].k.length; l++) {
+							var nombreIndice=0;
+							for (var m = 0; m < indices.length; m++) {
+								if (asses_session.k_calculus[1].k[l].ID.indexOf(indices[m]) != -1 && asses_session.k_calculus[1].k[l].ID_attribute.length<indices.length)
+									nombreIndice++;
+							}
+
+							if(nombreIndice==asses_session.k_calculus[1].k[l].ID_attribute.length)
+								KASoustraire.push(asses_session.k_calculus[1].k[l])
+						}
+						var final_k=final_proba;
+						for(var m=0; m<KASoustraire.length; m++)
+						{
+							final_k-=KASoustraire[m].value;
+						}
+						final_k=Math.round(final_k*1000)/1000;
+
+						asses_session.k_calculus[1].k[i].value=final_k; //for multilinear it's 1
+						// backup local
+						localStorage.setItem("asses_session", JSON.stringify(asses_session));
+						// we reload the list
+						$("#k_value_"+i).hide( "fast",function(){
+							update_k_list(1);
+							show_list();
+						});
+
+					});
+				}
+
+				// HANDLE USERS ACTIONS
+				$('.gain').click(function() {
+					$.post('ajax', '{"type":"question", "method": "PE", "proba": '+ String(probability) + ', "min_interval": '+ min_interval+ ', "max_interval": '+ max_interval+' ,"choice": "0", "mode": "'+String(mode)+'"}', function(data) {
+						treat_answer(data);
+					});
+				});
+
+				$('.lottery').click(function() {
+					$.post('ajax', '{"type":"question","method": "PE", "proba": '+ String(probability) + ', "min_interval": '+ min_interval+ ', "max_interval": '+ max_interval+' ,"choice": "1" , "mode": "'+String(mode)+'"}', function(data) {
+						treat_answer(data);
+					});
+				});
+			})()
+		}
+}
+
+function k_multilinear_calculate_last_one(i)
+{
+	var asses_session = JSON.parse(localStorage.getItem("asses_session"));
+	var indices=String(asses_session.k_calculus[1].k[i].ID).split(",");
+	var KASoustraire=[];
+
+	for(var l=0; l<asses_session.k_calculus[1].k.length; l++) {
+		var nombreIndice=0;
+		for (var m = 0; m < indices.length; m++) {
+			if (asses_session.k_calculus[1].k[l].ID.indexOf(indices[m]) != -1 && asses_session.k_calculus[1].k[l].ID_attribute.length<indices.length)
+				nombreIndice++;
+		}
+
+		if(nombreIndice==asses_session.k_calculus[1].k[l].ID_attribute.length)
+			KASoustraire.push(asses_session.k_calculus[1].k[l])
+	}
+
+	var final_k=1;
+	for(var m=0; m<KASoustraire.length; m++)
+	{
+		final_k-=KASoustraire[m].value;
+	}
+	final_k=Math.round(final_k*1000)/1000;
+
+	asses_session.k_calculus[1].k[i].value=final_k; //for multilinear it's 1
+	// backup local
+	localStorage.setItem("asses_session", JSON.stringify(asses_session));
+	// we reload the list
+	$("#k_value_"+i).hide( "fast",function(){
+		update_k_list(1);
+		show_list();
+	});
+}
+
+
+function k_answer(i, type)
+{
+
+	 	var asses_session = JSON.parse(localStorage.getItem("asses_session"));
+		var method = 'PE';
+		var settings = asses_session.settings;
+		var mon_k = asses_session.k_calculus[type].k[i];
+		var name = mon_k.attribute;
+		for (var j = 0; j < asses_session.attributes.length; j++) {
+			if (asses_session.attributes[j].name == name) {
+				var mon_attribut = asses_session.attributes[j];
+			}
+		}
+		var mode = mon_attribut.mode;
+
+		// we delete the slect div
+		$('#k_calculus_info').hide();
+
+
+		function random_proba(proba1, proba2) {
+			var coin = Math.round(Math.random());
+			if (coin == 1) {
+				return proba1;
+			}
+			else {
+				return proba2;
+			}
+		}
+	
+
+		///////////////////////////////////////////////////////////////// PE METHOD ////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			if (method == 'PE') {
+				(function(){
+
+				var probability = random_proba(0.25, 0.75);
+				var min_interval = 0;
+				var max_interval = 1;
+
+			// VARIABLES	
 				if(mode=="normal")
 				{
 					var gain_certain = asses_session.attributes[mon_k.ID_attribute].val_max + ' ' + asses_session.attributes[mon_k.ID_attribute].unit;
@@ -537,72 +747,6 @@ function k_multilinear_answer(i)
 		}
 
 }
-
-function k_multilinear_calculate_last_one(i)
-{
-	var asses_session = JSON.parse(localStorage.getItem("asses_session"));
-	var indices=String(asses_session.k_calculus[1].k[i].ID).split(",");
-	var KASoustraire=[];
-
-	for(var l=0; l<asses_session.k_calculus[1].k.length; l++) {
-		var nombreIndice=0;
-		for (var m = 0; m < indices.length; m++) {
-			if (asses_session.k_calculus[1].k[l].ID.indexOf(indices[m]) != -1 && asses_session.k_calculus[1].k[l].ID_attribute.length<indices.length)
-				nombreIndice++;
-		}
-
-		if(nombreIndice==asses_session.k_calculus[1].k[l].ID_attribute.length)
-			KASoustraire.push(asses_session.k_calculus[1].k[l])
-	}
-
-	var final_k=1;
-	for(var m=0; m<KASoustraire.length; m++)
-	{
-		final_k-=KASoustraire[m].value;
-	}
-	final_k=Math.round(final_k*1000)/1000;
-
-	asses_session.k_calculus[1].k[i].value=final_k; //for multilinear it's 1
-	// backup local
-	localStorage.setItem("asses_session", JSON.stringify(asses_session));
-	// we reload the list
-	$("#k_value_"+i).hide( "fast",function(){
-		update_k_list(1);
-		show_list();
-	});
-}
-
-
-function k_answer(i, type)
-{
-
-	 	var asses_session = JSON.parse(localStorage.getItem("asses_session"));
-		var method = 'PE';
-		var settings = asses_session.settings;
-		var mon_k = asses_session.k_calculus[type].k[i];
-		var name = mon_k.attribute;
-		for (var j = 0; j < asses_session.attributes.length; j++) {
-			if (asses_session.attributes[j].name == name) {
-				var mon_attribut = asses_session.attributes[j];
-			}
-		}
-		var mode = mon_attribut.mode;
-
-		// we delete the slect div
-		$('#k_calculus_info').hide();
-
-
-		function random_proba(proba1, proba2) {
-			var coin = Math.round(Math.random());
-			if (coin == 1) {
-				return proba1;
-			}
-			else {
-				return proba2;
-			}
-		}
-
-
 //#######################################################################################
 //#######################              CALCULATE K             ##########################
 //#######################################################################################
