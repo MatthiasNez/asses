@@ -422,13 +422,13 @@ function k_multilinear_answer(i)
 					}
 					if(mode=="normal")
 					{
-						gain_haut += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
-						gain_bas += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
+						gain_haut += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
+						gain_bas += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
 					}
 					else
 					{
-						gain_haut += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
-						gain_bas += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
+						gain_haut += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
+						gain_bas += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
 					}
 				}
 
@@ -614,7 +614,7 @@ function k_answer(i, type)
 				var min_interval = 0;
 				var max_interval = 1;
 
-			// VARIABLES	
+			// VARIABLES
 				if(mode=="normal")
 				{
 					var gain_certain = asses_session.attributes[mon_k.ID_attribute].val_max + ' ' + asses_session.attributes[mon_k.ID_attribute].unit;
@@ -630,38 +630,20 @@ function k_answer(i, type)
 
 				for (var l = 0; l < i; l++)
 				{
-					if(mode="normal")
-					{
-						var pre_k = asses_session.k_calculus[type].k[l];
-						gain_certain += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_min + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
-						gain_haut += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_max + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
-						gain_bas += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_mmin + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
-					}
-					else
-					{
-						var pre_k = asses_session.k_calculus[type].k[l];
-						gain_certain += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_max + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
-						gain_haut += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_min + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
-						gain_bas += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_max + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
-					}
-				}		
+					var pre_k = asses_session.k_calculus[type].k[l];
+					gain_certain += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_min + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
+					gain_haut += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_max + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
+					gain_bas += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_min + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
+				}
+
 				for (var l = i + 1 ; l < asses_session.k_calculus[type].k.length; l++)
-				{	
-					if(mode="normal")
-					{
-						var post_k = asses_session.k_calculus[type].k[l];
-						gain_certain += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
-						gain_haut += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_max + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
-						gain_bas += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
-					}
-					else
-					{
-						var post_k = asses_session.k_calculus[type].k[l];
-						gain_certain += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_max + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
-						gain_haut += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
-						gain_bas += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_max + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
-					}
-				}	
+				{
+					var post_k = asses_session.k_calculus[type].k[l];
+					gain_certain += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
+					gain_haut += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_max + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
+					gain_bas += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
+				}
+					
 				// INTERFACE
 				//on cache le bouton
 				$("#k_value_"+i).hide();
