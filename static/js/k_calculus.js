@@ -415,7 +415,7 @@ function k_multilinear_answer(i)
 						gain_certain += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
 						k++;
 					}
-					if(l==mon_k.ID_attribute[k] && mode!="normal")
+					else
 					{
 						gain_certain += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
 					}
@@ -424,7 +424,7 @@ function k_multilinear_answer(i)
 						gain_certain += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
 						k++;
 					}
-					if(l!=mon_k.ID_attribute[k] && mode!="normal")
+					else
 					{
 						gain_certain += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
 					}
