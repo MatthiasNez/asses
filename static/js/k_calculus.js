@@ -410,24 +410,33 @@ function k_multilinear_answer(i)
 					{
 						continue;
 					}
-					if(l==mon_k.ID_attribute[k])//if the attribut is in our list
+					if(l==mon_k.ID_attribute[k] && mode=="normal")//if the attribut is in our list
 					{
 						gain_certain += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
 						k++;
 					}
-					else
+					if(l==mon_k.ID_attribute[k] && mode!="normal")
 					{
 						gain_certain += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
 					}
-					if(mode=="normal")
+					if(l!=mon_k.ID_attribute[k] && mode=="normal")//if the attribut is in our list
 					{
-						gain_haut += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
-						gain_bas += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
+						gain_certain += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
+						k++;
 					}
-					else
+					if(l!=mon_k.ID_attribute[k] && mode!="normal")
+					{
+						gain_certain += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
+					}
+					if(mode=="normal")
 					{
 						gain_haut += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
 						gain_bas += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
+					}
+					else
+					{
+						gain_haut += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
+						gain_bas += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
 					}
 				}
 
