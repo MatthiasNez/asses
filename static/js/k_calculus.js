@@ -401,7 +401,6 @@ function k_multilinear_answer(i)
 				var gain_certain = "";
 				var gain_haut = "";
 				var gain_bas = "";
-				var mode = mon_attribut.mode;
 
 				var k=0;
 				//first we delete the array of k for multiplicative
@@ -414,27 +413,25 @@ function k_multilinear_answer(i)
 					{
 						gain_certain += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
 						k++;
+						gain_haut += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
+						gain_bas += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
 					}
 					if(l==mon_k.ID_attribute[k] && mode!="normal")
 					{
 						gain_certain += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
+						gain_haut += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
+						gain_bas += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
 					}
 					if(l!=mon_k.ID_attribute[k] && mode=="normal")//if the attribut is in our list
 					{
 						gain_certain += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
 						k++;
+						gain_haut += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
+						gain_bas += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
 					}
 					if(l!=mon_k.ID_attribute[k] && mode!="normal")
 					{
 						gain_certain += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
-					}
-					if(mode=="normal")
-					{
-						gain_haut += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
-						gain_bas += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
-					}
-					else
-					{
 						gain_haut += asses_session.attributes[l].val_min + ' ' + asses_session.attributes[l].unit+' <br/> ';
 						gain_bas += asses_session.attributes[l].val_max + ' ' + asses_session.attributes[l].unit+' <br/> ';
 					}
