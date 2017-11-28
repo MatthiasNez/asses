@@ -450,16 +450,8 @@ function k_multilinear_answer(i)
 
 				// SETUP ARBRE GAUCHE
 				arbre_gauche.questions_proba_haut = probability;
-				if(mode=="normal")
-				{
-					arbre_gauche.questions_val_max = gain_haut;
-					arbre_gauche.questions_val_min = gain_bas;
-				}
-				else
-				{
-					arbre_gauche.questions_val_max = gain_bas;
-					arbre_gauche.questions_val_min = gain_haut;
-				}
+				arbre_gauche.questions_val_max = gain_haut;
+				arbre_gauche.questions_val_min = gain_bas;
 				//arbre_gauche.questions_val_max = gain_haut;
 				//arbre_gauche.questions_val_min = gain_bas;
 				arbre_gauche.questions_val_mean = gain_certain;
