@@ -617,13 +617,13 @@ function k_answer(i, type)
 				{
 					var gain_certain = asses_session.attributes[mon_k.ID_attribute].val_max + ' ' + asses_session.attributes[mon_k.ID_attribute].unit;
 					var gain_haut = asses_session.attributes[mon_k.ID_attribute].val_max + ' ' + asses_session.attributes[mon_k.ID_attribute].unit;
-					var gain_bas = asses_session.attributes[mon_k.ID_attribute].val_min;
+					var gain_bas = asses_session.attributes[mon_k.ID_attribute].val_min + ' ' + asses_session.attributes[mon_k.ID_attribute].unit;
 				}
 				else
 				{
 					var gain_certain = asses_session.attributes[mon_k.ID_attribute].val_min + ' ' + asses_session.attributes[mon_k.ID_attribute].unit;
 					var gain_haut = asses_session.attributes[mon_k.ID_attribute].val_min + ' ' + asses_session.attributes[mon_k.ID_attribute].unit;
-					var gain_bas = asses_session.attributes[mon_k.ID_attribute].val_max;
+					var gain_bas = asses_session.attributes[mon_k.ID_attribute].val_max + ' ' + asses_session.attributes[mon_k.ID_attribute].unit;
 				}
 
 				for (var l = 0; l < i; l++)
@@ -631,7 +631,7 @@ function k_answer(i, type)
 					var pre_k = asses_session.k_calculus[type].k[l];
 					gain_certain += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_min + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
 					gain_haut += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_max + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
-					gain_bas += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_min;
+					gain_bas += '<br/>' + asses_session.attributes[pre_k.ID_attribute].val_min + ' ' + asses_session.attributes[pre_k.ID_attribute].unit;
 				}
 
 				for (var l = i + 1 ; l < asses_session.k_calculus[type].k.length; l++)
@@ -639,7 +639,7 @@ function k_answer(i, type)
 					var post_k = asses_session.k_calculus[type].k[l];
 					gain_certain += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
 					gain_haut += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_max + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
-					gain_bas += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min;
+					gain_bas += '<br/>' + asses_session.attributes[post_k.ID_attribute].val_min + ' ' + asses_session.attributes[post_k.ID_attribute].unit;
 				}
 
 				// INTERFACE
